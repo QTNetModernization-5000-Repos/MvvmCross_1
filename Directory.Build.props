@@ -1,0 +1,94 @@
+﻿<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>true</ImplicitUsings>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+
+    <StripSymbols>false</StripSymbols>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+
+    <NoWarn>$(NoWarn);CS0109;CS0108;CS0618;CS0114;NU1603;CS1591</NoWarn>
+
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Product>$(AssemblyName) ($(TargetFramework))</Product>
+    <Version>9.3.1</Version>
+
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <NuGetAudit>enable</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
+    <PackageProjectUrl>https://github.com/MvvmCross/MvvmCross</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <Authors>.NET Foundation and Contributors</Authors>
+    <Owners>MvvmCross;slodge;cheesebaron</Owners>
+    <PackageTags>mvvm;mvvmcross;xamarin;android;ios;mac;wpf;uwp;winui;maccatalyst</PackageTags>
+    <PackageReleaseNotes>https://github.com/MvvmCross/MvvmCross/releases</PackageReleaseNotes>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MS-PL</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsTestProject>$(MSBuildProjectName.Contains('UnitTest'))</IsTestProject>
+    <IsLibraryProject>$(MSBuildProjectName.Contains('MvvmCross'))</IsLibraryProject>
+
+    <_MvxTargetPlatformIdentifier>$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))</_MvxTargetPlatformIdentifier>
+    <_MvxTargetPlatformIsAndroid>false</_MvxTargetPlatformIsAndroid>
+    <_MvxTargetPlatformIsAndroid Condition="'$(_MvxTargetPlatformIdentifier)' == 'android'">True</_MvxTargetPlatformIsAndroid>
+    <_MvxTargetPlatformIsiOS>false</_MvxTargetPlatformIsiOS>
+    <_MvxTargetPlatformIsiOS Condition="'$(_MvxTargetPlatformIdentifier)' == 'ios'">True</_MvxTargetPlatformIsiOS>
+    <_MvxTargetPlatformIsMacCatalyst>false</_MvxTargetPlatformIsMacCatalyst>
+    <_MvxTargetPlatformIsMacCatalyst Condition="'$(_MvxTargetPlatformIdentifier)' == 'maccatalyst'">True</_MvxTargetPlatformIsMacCatalyst>
+    <_MvxTargetPlatformIsmacOS>false</_MvxTargetPlatformIsmacOS>
+    <_MvxTargetPlatformIsmacOS Condition="'$(_MvxTargetPlatformIdentifier)' == 'macos'">True</_MvxTargetPlatformIsmacOS>
+    <_MvxTargetPlatformIstvOS>false</_MvxTargetPlatformIstvOS>
+    <_MvxTargetPlatformIstvOS Condition="'$(_MvxTargetPlatformIdentifier)' == 'tvos'">True</_MvxTargetPlatformIstvOS>
+    <_MvxTargetPlatformIsWindows>false</_MvxTargetPlatformIsWindows>
+    <_MvxTargetPlatformIsWindows Condition="$(_MvxTargetPlatformIdentifier.Contains('windows')) == 'True'">True</_MvxTargetPlatformIsWindows>
+
+    <SupportedOSPlatformVersion Condition=" '$(_MvxTargetPlatformIsiOS)' == 'True' ">12.2</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition=" '$(_MvxTargetPlatformIstvOS)' == 'True' ">12.2</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition=" '$(_MvxTargetPlatformIsMacCatalyst)' == 'True' ">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition=" '$(_MvxTargetPlatformIsAndroid)' == 'True' ">23</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild Condition=" '$(IsTestProject)' != 'true'">true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TF_BUILD)' == 'true' OR '$(GITHUB_ACTIONS)' == 'true' ">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <Deterministic>true</Deterministic>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RepositoryUrl>https://github.com/MvvmCross/MvvmCross</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <!--
+    For Version 1.1 of Windows App SDK there is known issue with building
+      WinUI 3 library that results in error if the property EnableMsixTooling
+      is not set. This is set here since the base MvvmCross assembly and plugins
+      will need this property set.
+   -->
+  <PropertyGroup Condition=" '$(_MvxTargetPlatformIsWindows)' == 'True' ">
+    <EnableMsixTooling>true</EnableMsixTooling>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsLibraryProject)' == 'true'">
+    <None Include="$(MSBuildThisFileDirectory)\README.md" Pack="true" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

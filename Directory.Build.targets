@@ -1,0 +1,40 @@
+<Project>
+  <PropertyGroup Condition=" '$(_MvxTargetPlatformIsiOS)' == 'True' ">
+    <DefineConstants>$(DefineConstants);MONO;UIKIT;COCOA;APPLE;IOS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(_MvxTargetPlatformIsmacOS)' == 'True' ">
+    <DefineConstants>$(DefineConstants);MONO;COCOA;APPLE;MAC</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(_MvxTargetPlatformIsMacCatalyst)' == 'True' ">
+    <DefineConstants>$(DefineConstants);MONO;COCOA;APPLE;IOS;MACCATALYST</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(_MvxTargetPlatformIstvOS)' == 'True' ">
+    <DefineConstants>$(DefineConstants);MONO;COCOA;APPLE;TVOS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(_MvxTargetPlatformIsAndroid)' == 'True' ">
+    <DefineConstants>$(DefineConstants);MONO;ANDROID</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Roslynator.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="AsyncFixer">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SonarAnalyzer.CSharp">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(IsTestProject)' != 'true' and '$(IsLibraryProject)' == 'true' ">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+</Project>

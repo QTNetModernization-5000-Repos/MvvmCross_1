@@ -1,0 +1,26 @@
+name: dotnet format
+
+on: [pull_request]
+
+env:
+  NET_VERSION: 9.0.101
+
+jobs:
+  lint:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install .NET ${{ env.NET_VERSION }}
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.NET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet tool restore
+
+    - name: Run dotnet format
+      run: |
+        dotnet format whitespace --no-restore --verify-no-changes MvvmCross.sln
